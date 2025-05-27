@@ -18,10 +18,19 @@ let pixelSizeBoard = (size-1)*cellDist + cellSize;
 let offsetX = canvas.width/2 - pixelSizeBoard/2;
 let offsetY = canvas.height/2 - pixelSizeBoard/2;
 
+let showSelection = false;
+let clickPos;
+let selectedTile;
+
 async function update() {
     clearScreen();
 
     drawBoard();
+
+    if (showSelection) {
+        ctx.fillStyle = '#333333';
+        ctx.fillRect(clickPos.x - 60, clickPos.y - 50, 120, 40);
+    }
 
     requestAnimationFrame(update);
 }
@@ -35,7 +44,8 @@ function clearScreen() {
 function drawBoard() {
     for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
-            // Draw Rectangle
+
+            // Drawing cell
             let currentTile;
             if (myself.color === 'black') {
                 currentTile = localBoard[size - 1 - row][size - 1 - col];
@@ -44,14 +54,13 @@ function drawBoard() {
                 currentTile = localBoard[row][col];
             }
             
-
             const xPos = col * cellDist + offsetX;
             const yPos = row * cellDist + offsetY;
 
             ctx.fillStyle = '#aaaaaa';
             ctx.fillRect(xPos, yPos, cellSize, cellSize);
 
-            
+            // Draw bricks if any
             if (currentTile.length !== 0) {
                 const topBrick = currentTile[currentTile.length-1];
                 if (topBrick.color === 'white') {
@@ -66,6 +75,24 @@ function drawBoard() {
 
                 let brickOffset = cellSize/2 - brickSize/2;
                 ctx.fillRect(xPos + brickOffset, yPos + brickOffset, cellSize - 10, cellSize - 10);
+            }
+
+            // Showing directions
+            ctx.font = '30px serif';
+            ctx.fillStyle = '#aaaaaa';
+
+            if (myself.color === 'white') {
+                ctx.fillText('N', canvas.width/2 - 10, canvas.height/2 - pixelSizeBoard/2 - 10);
+                ctx.fillText('S', canvas.width/2 - 10, canvas.height/2 + pixelSizeBoard/2 + 30);
+                ctx.fillText('W', canvas.width/2 - pixelSizeBoard/2 - 40, canvas.height/2 + 10);
+                ctx.fillText('E', canvas.width/2 + pixelSizeBoard/2 + 10, canvas.height/2 + 10);
+            }
+            
+            if (myself.color === 'black') {
+                ctx.fillText('S', canvas.width/2 - 10, canvas.height/2 - pixelSizeBoard/2 - 10);
+                ctx.fillText('N', canvas.width/2 - 10, canvas.height/2 + pixelSizeBoard/2 + 30);
+                ctx.fillText('E', canvas.width/2 - pixelSizeBoard/2 - 30, canvas.height/2 + 10);
+                ctx.fillText('W', canvas.width/2 + pixelSizeBoard/2 + 10, canvas.height/2 + 10);
             }
         }
     }
@@ -135,8 +162,7 @@ function isMouseHoveringTile(mouseX, mouseY) {
     return false;
 }
 
-canvas.addEventListener('mousedown', (e) => {
-
+function getMousePosition(e) {
     // Calculating mouse pos
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -144,9 +170,22 @@ canvas.addEventListener('mousedown', (e) => {
     const mouseX = (e.clientX - rect.left) * scaleX;
     const mouseY = (e.clientY - rect.top) * scaleY;
 
-    const tileIndex = isMouseHoveringTile(mouseX, mouseY);
-    if (tileIndex !== false) {
-        makeMove(tileIndex, null, 'road');
+    return { x: mouseX, y: mouseY };
+}
+
+canvas.addEventListener('mousedown', (e) => {
+    const mousePos = getMousePosition(e);
+    const tileIndex = isMouseHoveringTile(mousePos.x, mousePos.y);
+    
+
+    if (!showSelection && tileIndex) {
+        showSelection = true;
+        selectedTile = tileIndex;
+        clickPos = mousePos;
+    }
+    else if (showSelection) {
+        makeMove(selectedTile, null, 'road');
+        showSelection = false;
     }
 });
 
