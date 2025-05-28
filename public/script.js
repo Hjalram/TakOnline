@@ -1,6 +1,6 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const socket = io();
+const socket = io(); // Connecting to the server
 
 canvas.width = 700;
 canvas.height = 400;
@@ -64,10 +64,10 @@ function drawBoard() {
             if (currentTile.length !== 0) {
                 const topBrick = currentTile[currentTile.length-1];
                 if (topBrick.color === 'white') {
-                    ctx.fillStyle = '#ffffff';
+                    ctx.fillStyle = '#ebceb0';
                 }
                 else if (topBrick.color === 'black') {
-                    ctx.fillStyle = '#000000';
+                    ctx.fillStyle = '#634226';
                 }
                 else {
                     ctx.fillStyle = '#ff0000';
@@ -179,9 +179,15 @@ canvas.addEventListener('mousedown', (e) => {
     
 
     if (!showSelection && tileIndex) {
-        showSelection = true;
-        selectedTile = tileIndex;
-        clickPos = mousePos;
+
+        if (localBoard[tileIndex[0]][tileIndex[1]].length !== 0) {
+            makeMove([5,5], [tileIndex[0], tileIndex[1]], null);
+        }
+        else {
+            showSelection = true;
+            selectedTile = tileIndex;
+            clickPos = mousePos;
+        }
     }
     else if (showSelection) {
         makeMove(selectedTile, null, 'road');
