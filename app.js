@@ -52,7 +52,17 @@ io.on('connect', (socket) => {
             getPlayerById(socket.id).bricks--;
         }
         else if (data.type === 'movement') {
-            console.log('Movement is not yet supported!');
+            const destRow = data.destination[0];
+            const destCol = data.destination[1];
+
+            const startRow = data.start[0];
+            const startCol = data.start[1];
+
+            board[destRow][destCol].push(board[startRow][startCol]);
+            board[startRow][startCol] = [];
+
+            io.emit('boardUpdate', board);
+            //console.log('Movement is not yet supported!');
         }
     })
 

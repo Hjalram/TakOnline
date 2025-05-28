@@ -4,9 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tak Online</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <div class="wrapper">
+        <div class="side-panel">
+            <h1>Tak Online</h1>
+            <button>Play</button>
+            <button>Settings</button>
+            <button>Events</button>
+            <button>Contacts</button>
+        </div>
+        <div class="canvas-cell">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>

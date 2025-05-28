@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: grid;
+
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 1fr;
+}
+
+.canvas-cell {
+    border: 3px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(186, 186, 186);
+}
+
+canvas {
+    border-radius: 10px;
+}
+
+.side-panel {
+    padding-top: 10px;
+    color: white;
+    background-color: rgb(53, 53, 53);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.side-panel button {
+    color: white;
+    width: 70%;
+    height: 30px;
+    background-color: gray;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.side-panel h1 {
+    margin-bottom: 10px;
+    text-decoration: underline;
+}
